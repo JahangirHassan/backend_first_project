@@ -5,8 +5,8 @@ import {upload } from "../middlewares/multer.middlewares.js"
 const router = Router()
 
 
-router.route("/register").post(
-upload.fields([
+router.post(
+"/registers", upload.fields([
     {name: 'avatar', maxCount: 1},
     {name: 'coverImage', maxCount: 1}
   ]),

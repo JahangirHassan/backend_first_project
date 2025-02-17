@@ -23,7 +23,7 @@ import userRouter from "./routes/user.routes.js"
 
 
 //routes declearation 
-app.use("api/v1/users", userRouter)
+app.use("/api/v1/users", userRouter)
 
 
 
