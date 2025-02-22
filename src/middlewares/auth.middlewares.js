@@ -5,23 +5,32 @@ import jwt from "jsonwebtoken";
 
  const verifyJWT = asyncHandler(async (req, _ , next) => {
 
-          const token = req.cookies?.accessToken || req.header("Authorization")?.replace("bearer ", "");
-            console.log("this is a token",token)
-          if (!token) {
-           throw new ApiError("Unauthorized request");
-          }
-          
-          const decodeToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        try {
+            const token =  req.headers.cookie?.split(';') || [];
+            const tokens = token.find((c) => c.trim().startsWith('accessToken='));
+            const acessToken = tokens && tokens.split('=')[1];
+            const accessToken= req.cookies?.accessToken || acessToken;
+  
+            if (!accessToken) {
+             throw new ApiError("Unauthorized request");
+            }
             
-          const user = await  User.findById(decodeToken._id)?.select(
-                    "-password -__v -createdAt -updatedAt -refreshToken"
-          )
-          if (!user) {
-                    //TODE Discussion about frontend
-                    throw new ApiError(401,"invalid access token");
-          }
-          req.user = user;
-          next();
+            const decodeToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+              
+            const user = await  User.findById(decodeToken._id)?.select(
+                      "-password -__v -createdAt -updatedAt -refreshToken"
+            )
+            if (!user) {
+                      //TODE Discussion about frontend
+                      throw new ApiError(401,"invalid access token");
+            }
+            req.user = user;
+            next();
+        } catch (error) {
+
+          throw new ApiError(401, error?.message || " invalid access Token request");
+          
+        }
 
 })
 
