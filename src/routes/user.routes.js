@@ -6,7 +6,7 @@ import {verifyJWT} from "../middlewares/auth.middlewares.js"
 const router = Router()
 
 
-router.route("/registers").post(upload.fields([
+router.route("/register").post(upload.fields([
     {name: 'avatar', maxCount: 1},
     {name: 'coverImage', maxCount: 1}
   ]),
@@ -17,4 +17,5 @@ router.route("/login").post(loginUser)
 
 //secure routes
 router.route("/logout").post( verifyJWT, logoutUser)
+
 export default router

@@ -3,10 +3,10 @@ import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 
- const verifyJWT = asyncHandler(async (req, res, next) => {
+ const verifyJWT = asyncHandler(async (req, _ , next) => {
 
-try {
-          const token = req.cookies?.accessToken || req.header("Authorization")?.replace("barreer ", "");
+          const token = req.cookies?.accessToken || req.header("Authorization")?.replace("bearer ", "");
+            console.log("this is a token",token)
           if (!token) {
            throw new ApiError("Unauthorized request");
           }
@@ -22,12 +22,6 @@ try {
           }
           req.user = user;
           next();
-} catch (error) {
-
-          throw new ApiError(401,"invalid access token in middleware");
-          
-          
-}
 
 })
 
