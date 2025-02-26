@@ -170,8 +170,8 @@ const logoutUser = asyncHandler(async(req, res)=>{
   await User.findByIdAndUpdate(
     req.user._id,
     {
-      $set:{
-        refreshToken: undefined,
+      $unset:{
+        refreshToken: 1,
       }
     },
     {
@@ -364,7 +364,7 @@ const updateUserCoverImage = asyncHandler(async(req, res)=>{
 
 const getUserChannelUpdate = asyncHandler(async(req, res)=>{
      
-  const userName = req.params
+  const {userName} = req.params
 
   if (!userName?.trim()){
     throw new ApiError(400, "User name is missing");
@@ -372,26 +372,26 @@ const getUserChannelUpdate = asyncHandler(async(req, res)=>{
 
   const channel = await User.aggregate([{
  $match: {
-  userName: userName?.toLowerCase()
- },
-  $lookup: {
+  userName: userName.toLowerCase()
+ }},
+{$lookup: {
     from: "subscriptions",
     localField: "_id",
     foreignField: "channel",
     as: "subscribers"
-  },
-  $lookup: {
+  }},
+  {$lookup: {
     from: "subscriptions",
     localField: "_id",
-    foreignField: "Subscriber",
+    foreignField: "subscriber",
     as: "subscribeTo"
-  },
-  $addFields: {
+  }},
+  {$addFields: {
     "subscribersCount": { $size: "$subscribers" },
     "subscribeChannelToCount": { $size: "$subscribeTo" },
     isSubscribe: {
       $cond: {
-        if: { $in: [req.user?._id, "subscribers.subscriber"] },
+        if: { $in: [req.user?._id, "$subscribers.subscriber"] },
         then: true,
         else: false
       }
@@ -423,7 +423,7 @@ return res
 })
 
 const getWatchHistory = asyncHandler(async(req, res) => {
-  const user = await User.aggregate[{
+  const user = await User.aggregate([{
      $match: {
       _id: new mongoose.Types.ObjectId(req.user._id)
      }
@@ -447,20 +447,23 @@ const getWatchHistory = asyncHandler(async(req, res) => {
                 userName: 1,
                 fullName: 1,
                 avatar: 1
-              }
+              },
              },
-            {
+             {
               $addFields: {
                 owner: {
                   $first: "$owner"
-                }
-              }
-            }]
-          }
-        }
-      ]
+                },
+              },
+            },
+            ],
+          },
+        },
+      ],
     },
-  }]
+  },
+])
+
 
   return res
   .status(200)

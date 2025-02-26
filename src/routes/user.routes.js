@@ -36,12 +36,11 @@ router.route("/change-password").post(verifyJWT, changeCurrentPassword);
 router.route("/current-user").get(verifyJWT, getCurrentUser);
 router.route("/update-user-datails").patch(verifyJWT, updateUserDetails);
 router
-  .route("/update-avatar")
-  .patch(verifyJWT, upload.single("avatar"), updateUserAvatar);
+  .route("/update-avatar").patch(verifyJWT, upload.single("avatar"), updateUserAvatar);
 router
-  .route("update-cover-image")
+  .route("/update-cover-image")
   .patch(verifyJWT, upload.single("coverImage"), updateUserCoverImage);
-router.route("/channel/:userName").get(verifyJWT, getUserChannelUpdate);
-router.route("/watchHistory").get(verifyJWT, getWatchHistory);
+router.route("/c/:userName").get(verifyJWT, getUserChannelUpdate);
+router.route("/history").get(verifyJWT, getWatchHistory);
 
 export default router;
