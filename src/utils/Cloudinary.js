@@ -26,4 +26,19 @@ import fs from "fs"
         }
     }
 
-    export {uploadOnCloudinary};
+
+    const deleteOnCloudinary = async (localPathDelete) => {
+        try {
+            if (!localPathDelete) return null;
+    
+            //delete file from cloudinary
+            const result = await cloudinary.uploader.destroy(localPathDelete, {
+                resource_type: "auto"
+            });
+        } catch (error) {
+            return error;
+            console.log("delete on cloudinary failed", error);
+        }
+    };
+
+    export {uploadOnCloudinary, deleteOnCloudinary};
