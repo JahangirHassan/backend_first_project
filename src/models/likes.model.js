@@ -1,4 +1,4 @@
-import mongoose, { Schema, Types } from "mongoose";
+import mongoose, { Schema, } from "mongoose";
 
 
 
@@ -26,6 +26,5 @@ const likesSchema = new Schema(
           }
 )
 
-likesSchema.plugin(likesSchema);
 
 export const Like = mongoose.model("Like", likesSchema);
