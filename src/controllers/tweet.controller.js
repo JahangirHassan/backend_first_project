@@ -30,7 +30,7 @@ const getUserTweets = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid user ID");
     }
     const allTweets = Tweet.aggregate([
-      {$match: { owner : mongoose.Types.ObjectId(userId) }
+      {$match: { owner : new mongoose.Types.ObjectId(userId) }
     },
     {
       $lookup: {

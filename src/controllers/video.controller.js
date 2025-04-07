@@ -32,7 +32,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
          }
          pipeline.push({
             $match:{
-                owner: mongoose.Types.ObjectId(userId)
+                owner:new mongoose.Types.ObjectId(userId)
             }
          })
     }
@@ -169,7 +169,7 @@ const getVideoById = asyncHandler(async (req, res) => {
     const video = await Video.aggregate([
         {
             $match: {
-                _id: mongoose.Types.ObjectId(videoId)
+                _id: new mongoose.Types.ObjectId(videoId)
             }
         },
         {
@@ -240,7 +240,7 @@ const getVideoById = asyncHandler(async (req, res) => {
                 isLiked: {
                     $cond: {
                         if: {
-                            $in: [mongoose.Types.ObjectId(req.user?._id), "likesTo.owner"]
+                            $in: [ new mongoose.Types.ObjectId(req.user?._id), "likesTo.owner"]
                         },
                         then: true,
                         else: false
@@ -249,7 +249,7 @@ const getVideoById = asyncHandler(async (req, res) => {
                 isCommented:{
                     $cond: {
                         if: {
-                            $in: [mongoose.Types.ObjectId(req.user?._id), "$commentsTo.owner"]
+                            $in: [ new mongoose.Types.ObjectId(req.user?._id), "$commentsTo.owner"]
                         },
                         then: true,
                         else: false
