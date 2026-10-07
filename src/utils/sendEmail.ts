@@ -26,7 +26,9 @@ export const sendEmail = async ({ to, subject, html, text }: EmailOptions) => {
     if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
       throw new ApiError(500, "Email is not configured");
     }
-    const transporter = getTransporter()
+
+    const transporter = getTransporter();
+    
     await transporter.sendMail({
       from: process.env.SMTP_USER,
       to,
